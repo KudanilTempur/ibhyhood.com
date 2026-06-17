@@ -32,14 +32,13 @@ export default function HomePage() {
             <div className="absolute inset-0 z-20 flex items-center justify-center p-6">
                 <div className="relative h-[90%] w-[90%] max-w-[1440px]">
                     <ScaledPanel>
+                        <SidebarMenu />
                         <HeroImageStack
                             heroImage={heroMain}
                             sideImage={sideButtonSurface}
                             logoImage={ibhyLogo}
                             iconButton={planeButton}
                         />
-
-
                     </ScaledPanel>
                 </div>
             </div>
@@ -65,10 +64,10 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
                 className="
                     pointer-events-none
                     absolute
-                    -left-[2%]
-                    -top-[4%]
+                    -left-[1%]
+                    -top-[2.5%]
                     z-20
-                    h-[64%]
+                    h-[120%]
                     w-auto
                     select-none
                     object-contain
@@ -102,7 +101,7 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
             />
             {/* Button YouTube */}
             <a
-                href="https://www.youtube.com/"
+                href="https://www.youtube.com/@IbhyHood"
                 target="_blank"
                 rel="noreferrer"
                 className="
@@ -111,12 +110,13 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
         top-[101.5%]
         z-30
         flex
-        h-[18%]
+        h-[16%]
         w-full
         items-center
         rounded-full
         bg-white
-        pl-[4%] pr-[1%]
+        pl-[4%]
+        pr-[1%]
         text-black
         shadow-lg
         transition
@@ -140,5 +140,61 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
                 />
             </a>
         </div>
+
+
+    );
+}
+
+function SidebarMenu() {
+    const menus = [
+        { label: "Home" },
+        { label: "Merch" },
+        { label: "Vume" },
+        { label: "Gigs" },
+    ];
+
+    return (
+        <nav
+            className="
+                absolute
+                left-[1%]
+                top-[4%]
+                z-40
+                flex
+                w-[11%]
+                min-w-[120px]
+                flex-col
+                gap-2
+                rounded-[24px]
+                p-2
+            "
+        >
+            {menus.map((menu, index) => (
+                <button
+                    key={menu.label}
+                    className={`
+                        flex
+                        items-center
+                        gap-2
+                        rounded-full
+                        px-4
+                        py-1
+                        text-left
+                        text-[clamp(5px,1vw,11px)]
+                        font-semibold
+                        transition
+                        ${index === 0
+                            ? "bg-black text-white"
+                            : "text-black hover:bg-black/10"
+                        }
+                    `}
+                >
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-current/10">
+                        ●
+                    </span>
+                    <span>{menu.label}</span>
+                </button>
+            ))}
+        </nav>
     );
 }
