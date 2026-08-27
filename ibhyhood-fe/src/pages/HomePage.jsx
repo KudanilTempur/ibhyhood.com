@@ -4,6 +4,27 @@ import sideButtonSurface from "../assets/images/side-button-surface.png";
 import ScaledPanel from "../components/ScaledPanel";
 import ibhyLogo from "../assets/images/ibhy-logo.png";
 import planeButton from "../assets/images/plane-button.png";
+import yellowShape from "../assets/images/yellow-shape.png";
+import blackShape from "../assets/images/black-shape.png";
+import homeButtonDefault from "../assets/icons/home-button-default.png";
+import homeButtonClicked from "../assets/icons/home-button-clicked.png";
+
+import merchandiseButtonDefault from "../assets/icons/merchandise-button-default.png";
+import merchandiseButtonClicked from "../assets/icons/merchandise-button-clicked.png";
+
+import perfumeButtonDefault from "../assets/icons/perfume-button-default.png";
+import perfumeButtonClicked from "../assets/icons/perfume-button-clicked.png";
+
+import gigsButtonDefault from "../assets/icons/gigs-button-default.png";
+import gigsButtonClicked from "../assets/icons/gigs-button-clicked.png";
+
+import VumePage from "./VumePage";
+
+import { useNavigate } from "react-router-dom";
+
+
+import pandaGiveaway from "../assets/images/panda-giveaway.png";
+import { useState } from "react";
 
 const bgImageStyle = {
     position: "absolute",
@@ -14,7 +35,17 @@ const bgImageStyle = {
     objectPosition: "center",
 };
 
+const getIndonesianMonth = () => {
+    const months = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    const currentMonth = new Date().getMonth();
+    return months[currentMonth];
+};
+
 export default function HomePage() {
+    const [activeMenu, setActiveMenu] = useState(0);
     return (
         <main className="fixed inset-0 isolate h-dvh w-dvw overflow-hidden bg-black">
             {/* Background utama */}
@@ -29,16 +60,28 @@ export default function HomePage() {
             <div className="absolute inset-0 z-10 bg-black/25" />
 
             {/* Panel + Content */}
-            <div className="absolute inset-0 z-20 flex items-center justify-center p-6">
-                <div className="relative h-[90%] w-[90%] max-w-[1440px]">
+            <div className="absolute inset-0 z-20 flex items-center justify-center p-[clamp(12px,2vw,32px)]">
+                <div
+                    className="relative"
+                    style={{
+                        width: "min(90vw, calc(90dvh * 1.566), 1680px)",
+                        aspectRatio: "1433 / 915",
+                        containerType: "inline-size",
+                    }}
+                >
                     <ScaledPanel>
-                        <SidebarMenu />
+
                         <HeroImageStack
                             heroImage={heroMain}
                             sideImage={sideButtonSurface}
                             logoImage={ibhyLogo}
                             iconButton={planeButton}
+                            activeMenu={activeMenu}
+                            setActiveMenu={setActiveMenu}
                         />
+
+                        <RightSchedule />
+                        <GiveawayCard promoImage={pandaGiveaway} />
                     </ScaledPanel>
                 </div>
             </div>
@@ -46,7 +89,14 @@ export default function HomePage() {
     );
 }
 
-function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
+function HeroImageStack({
+    heroImage,
+    sideImage,
+    logoImage,
+    iconButton,
+    activeMenu,
+    setActiveMenu,
+}) {
     return (
         <div
             className="
@@ -62,16 +112,22 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
                 src={sideImage}
                 alt="Side Surface"
                 className="
-                    pointer-events-none
-                    absolute
-                    -left-[1%]
-                    -top-[2.5%]
-                    z-20
-                    h-[120%]
-                    w-auto
-                    select-none
-                    object-contain
-                "
+        pointer-events-none
+        absolute
+        -left-[1%]
+        -top-[2.5%]
+        z-20
+        h-[120%]
+        w-auto
+        select-none
+        object-contain
+    "
+            />
+
+            {/* Navigasi kiri, ikut skala HeroImageStack / side surface */}
+            <SidebarMenu
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
             />
 
             {/* Hero utama */}
@@ -145,56 +201,311 @@ function HeroImageStack({ heroImage, sideImage, logoImage, iconButton }) {
     );
 }
 
-function SidebarMenu() {
+function SidebarMenu({
+    activeMenu,
+    setActiveMenu,
+}) {
+    const navigate = useNavigate();
+
     const menus = [
-        { label: "Home" },
-        { label: "Merch" },
-        { label: "Vume" },
-        { label: "Gigs" },
+        {
+            label: "Home",
+            path: "/",
+            defaultIcon: homeButtonDefault,
+            clickedIcon: homeButtonClicked,
+        },
+        {
+            label: "Merch",
+            path: null,
+            defaultIcon: merchandiseButtonDefault,
+            clickedIcon: merchandiseButtonClicked,
+        },
+        {
+            label: "Vume",
+            path: "/vume",
+            defaultIcon: perfumeButtonDefault,
+            clickedIcon: perfumeButtonClicked,
+        },
+        {
+            label: "Gigs",
+            path: null,
+            defaultIcon: gigsButtonDefault,
+            clickedIcon: gigsButtonClicked,
+        },
     ];
 
     return (
         <nav
             className="
                 absolute
-                left-[1%]
-                top-[4%]
+                left-[2.5%]
+                top-[4.5%]
                 z-40
                 flex
-                w-[11%]
-                min-w-[120px]
+                w-[20%]
                 flex-col
-                gap-2
-                rounded-[24px]
-                p-2
+                gap-[0.55em]
+                p-[1.2%]
             "
         >
-            {menus.map((menu, index) => (
-                <button
-                    key={menu.label}
-                    className={`
-                        flex
-                        items-center
-                        gap-2
-                        rounded-full
-                        px-4
-                        py-1
-                        text-left
-                        text-[clamp(5px,1vw,11px)]
-                        font-semibold
-                        transition
-                        ${index === 0
-                            ? "bg-black text-white"
-                            : "text-black hover:bg-black/10"
-                        }
-                    `}
-                >
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-current/10">
-                        ●
-                    </span>
-                    <span>{menu.label}</span>
-                </button>
-            ))}
+            {menus.map((menu, index) => {
+                const isActive = activeMenu === index;
+
+                return (
+                    <button
+                        key={menu.label}
+                        onClick={() => {
+                            setActiveMenu(index);
+
+                            if (menu.path) {
+                                navigate(menu.path);
+                            }
+                        }}
+                        className={`
+                            flex
+                            items-center
+                            gap-[10%]
+                            rounded-full
+                            px-[10%]
+                            py-[5%]
+                            text-left
+                            text-[clamp(8px,1.05vw,18px)]
+                            font-semibold
+                            transition
+                            ${isActive
+                                ? "bg-black text-white"
+                                : "text-black hover:bg-black/10"
+                            }
+                        `}
+                    >
+                        <img
+                            src={
+                                isActive
+                                    ? menu.clickedIcon
+                                    : menu.defaultIcon
+                            }
+                            alt={menu.label}
+                            className="
+                                h-[1.1em]
+                                w-[1.1em]
+                                shrink-0
+                                object-contain
+                            "
+                        />
+
+                        <span>
+                            {menu.label}
+                        </span>
+                    </button>
+                );
+            })}
         </nav>
+    );
+}
+
+function RightSchedule() {
+    const schedules = [
+        {
+            day: "31",
+            title: "Mobile Legends",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+        {
+            day: "1",
+            title: "REANIMAL",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+        {
+            day: "2",
+            title: "Mobile Legends",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+        {
+            day: "3",
+            title: "A SPACE FOR THE UNBOUND",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+        {
+            day: "4",
+            title: "Mobile Legends",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+        {
+            day: "5",
+            title: "Mobile Legends",
+            time: "[21.00/21.30 WIB]",
+            type: "LIVE STREAM",
+        },
+    ];
+
+    return (
+        <section
+            className="
+                absolute
+                right-[1.4%]
+                top-[3%]
+                z-30
+                h-[68%]
+                w-[28%]
+                overflow-hidden
+                rounded-[34px]
+                bg-white/90
+                p-[1.1%]
+            "
+        >
+            {/* Header */}
+            <div className="mb-[4%] flex items-center justify-between gap-[4%]">
+                <div className="relative h-[clamp(28px,4cqw,56px)] flex-1">
+                    <img
+                        src={blackShape}
+                        alt=""
+                        className="h-full w-full object-fill"
+                    />
+                </div>
+
+                <div className="text-right leading-none">
+                    <h2 className="text-[clamp(14px,1.7cqw,30px)] font-black italic tracking-wide text-black">
+                        SCHEDULE
+                    </h2>
+                    <p className="text-[clamp(13px,1.45cqw,26px)] font-black italic text-black">
+                        {getIndonesianMonth()}
+                    </p>
+                </div>
+            </div>
+
+            {/* List */}
+            <div className="flex h-[86%] flex-col gap-[2.2%]">
+                {schedules.map((item) => (
+                    <article
+                        key={`${item.day}-${item.title}`}
+                        className="
+                            flex
+                            min-h-0
+                            flex-1
+                            items-center
+                            justify-between
+                            gap-[4%]
+                            rounded-[22px]
+                            bg-[#667AB3]
+                            px-[4%]
+                            py-[3%]
+                        "
+                    >
+                        <div className="min-w-0 flex-1 leading-none">
+                            <p className="text-[clamp(6px,0.75cqw,13px)] font-medium italic text-white/80">
+                                [{item.type}]
+                            </p>
+
+                            <h3 className="mt-[2%] line-clamp-2 text-[clamp(10px,1.25cqw,23px)] font-black italic leading-[0.95] text-white">
+                                {item.title}
+                            </h3>
+
+                            <p className="mt-[3%] text-right text-[clamp(6px,0.72cqw,12px)] font-black italic text-yellow-300">
+                                {item.time}
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                                flex
+                                aspect-square
+                                w-[20%]
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-[16px]
+                                bg-[#07070D]
+                                text-[clamp(16px,2cqw,34px)]
+                                font-black
+                                italic
+                                text-white
+                            "
+                        >
+                            {item.day}
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function GiveawayCard({ promoImage }) {
+    return (
+        <section
+            className="
+                absolute
+                bottom-[3%]
+                right-[1.4%]
+                z-30
+                h-[24%]
+                w-[28%]
+                overflow-hidden
+                rounded-[28px]
+                bg-black
+            "
+        >
+            <img
+                src={promoImage}
+                alt="Giveaway"
+                className="
+                    absolute
+                    inset-0
+                    h-full
+                    w-full
+                    object-cover
+                    object-center
+                "
+            />
+
+            <div className="absolute inset-0 bg-black/10" />
+
+            <div
+                className="
+        absolute
+        left-[4%]
+        top-[8%]
+        h-[34%]
+        w-[46%]
+    "
+            >
+                <img
+                    src={yellowShape}
+                    alt=""
+                    className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-fill
+        "
+                />
+
+                <div
+                    className="
+            absolute
+            inset-0
+            flex
+            flex-col
+            justify-center
+            px-[8%]
+            text-black
+        "
+                >
+                    <p className="text-[clamp(7px,0.9cqw,14px)] font-black italic leading-none">
+                        GIVEAWAY ON JUNE
+                    </p>
+
+                    <p className="mt-[4%] text-[clamp(8px,1cqw,16px)] font-black italic leading-none">
+                        1000 SUBS++
+                    </p>
+                </div>
+            </div>
+        </section>
     );
 }
