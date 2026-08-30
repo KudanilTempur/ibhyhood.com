@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import VumePage from "./pages/VumePage";
 import GigsPage from "./pages/GigsPage";
 import MerchPage from "./pages/MerchPage";
+import AdminPage from "./pages/AdminPage";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/vume" element={<VumePage />} />
         <Route path="/gigs" element={<GigsPage />} />
         <Route path="/merch" element={<MerchPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );
