@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { GIGS_DATA } from "../data/gigsData";
 import GigDetailModal from "../components/GigDetailModal";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 export default function GigsPage() {
     const [selectedGig, setSelectedGig] = useState(null);
@@ -10,15 +11,7 @@ export default function GigsPage() {
     return (
         <div className="min-h-screen flex flex-col bg-white">
             {/* Navbar */}
-            <nav className="fixed top-0 left-0 z-50 w-full bg-[#6B7CB4] px-10 py-6 text-white flex justify-between items-center">
-                <div className="font-bold text-xl">Ibhyhood</div>
-                <div className="flex gap-8 text-sm font-medium">
-                    <Link to="/" className="hover:opacity-80">Home</Link>
-                    <Link to="#" className="hover:opacity-80">Merch</Link>
-                    <Link to="/vume" className="hover:opacity-80">Vume</Link>
-                    <Link to="/gigs" className="border-b-2 border-white pb-0.5">Gigs</Link>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Hero Section */}
             <section className="px-8 py-10 max-w-4xl pt-24">
