@@ -5,9 +5,29 @@ export default function GigDetailModal({ gig, onClose }) {
 
     if (!gig) return null;
 
+    // Nomor WhatsApp tujuan (Ganti angka ini dengan nomor WhatsApp milikmu, gunakan format 628...)
+    const PHONE_NUMBER = "6281234567890";
+
     const currentPackage = gig.packages?.[activeTab] || {
-        price: "Rp 100k",
-        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        price: gig.startingPrice || "Rp 100k",
+        desc: "Custom service request."
+    };
+
+    const handleOrderWhatsApp = () => {
+        const packageName = activeTab === "standart" ? "Standard" : activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
+
+        // Format pesan otomatis ke WhatsApp
+        const message = `Halo, saya berminat untuk memesan jasa *${gig.title}*.\n\n` +
+            `*Paket:* ${packageName}\n` +
+            `*Harga:* ${currentPackage.price}\n` +
+            `*Detail Paket:* ${currentPackage.desc}\n\n` +
+            `Apakah slot masih tersedia?`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const waUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`;
+
+        // Buka link WhatsApp di tab baru
+        window.open(waUrl, "_blank");
     };
 
     return (
@@ -35,8 +55,12 @@ export default function GigDetailModal({ gig, onClose }) {
                             />
                         </div>
                         <div className="grid grid-cols-4 gap-2">
-                            {[1, 2, 3, 4].map((_, idx) => (
-                                <div key={idx} className="h-12 sm:h-16 bg-gray-200 rounded-lg"></div>
+                            {(gig.gallery && gig.gallery.length > 0 ? gig.gallery : [1, 2, 3, 4]).map((img, idx) => (
+                                <div key={idx} className="h-12 sm:h-16 bg-gray-200 rounded-lg overflow-hidden">
+                                    {typeof img === 'string' && (
+                                        <img src={img} alt="" className="w-full h-full object-cover" />
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -49,8 +73,8 @@ export default function GigDetailModal({ gig, onClose }) {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`py-2.5 capitalize transition-all ${activeTab === tab
-                                            ? "bg-[#6B7CB4] text-white font-bold"
-                                            : "text-gray-600 hover:bg-indigo-100"
+                                        ? "bg-[#6B7CB4] text-white font-bold"
+                                        : "text-gray-600 hover:bg-indigo-100"
                                         }`}
                                 >
                                     {tab === "standart" ? "Standard" : tab}
@@ -64,8 +88,11 @@ export default function GigDetailModal({ gig, onClose }) {
                                 <p className="text-xs sm:text-sm text-gray-600 mt-1">{currentPackage.desc}</p>
                             </div>
 
-                            <button className="w-full bg-[#6B7CB4] hover:bg-[#5a6a9d] text-white font-semibold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors">
-                                Order Now <span>→</span>
+                            <button
+                                onClick={handleOrderWhatsApp}
+                                className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
+                            >
+                                Order via WhatsApp <span>→</span>
                             </button>
                         </div>
                     </div>
@@ -74,7 +101,7 @@ export default function GigDetailModal({ gig, onClose }) {
                 {/* Description */}
                 <div className="mt-6 border-t pt-4">
                     <h3 className="font-bold text-sm sm:text-base mb-1">Description this gig</h3>
-                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                         {gig.description || "No description provided for this service."}
                     </p>
                 </div>

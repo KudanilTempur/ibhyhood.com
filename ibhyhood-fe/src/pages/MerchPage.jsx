@@ -2,11 +2,18 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { FEATURED_PROMO, MERCH_FILTERS, MERCH_ITEMS } from "../data/merchData";
 import Footer from "../components/Footer";
+import MerchDetailModal from "../components/MerchDetailModal";
+import { useCart } from "../context/CartContext";
 
 export default function MerchPage() {
     const [selectedTypes, setSelectedTypes] = useState([]);
     const [selectedThemes, setSelectedThemes] = useState([]);
     const [showMobileFilter, setShowMobileFilter] = useState(false);
+    const [selectedMerch, setSelectedMerch] = useState(null);
+
+    // Context Keranjang Belanja
+    const { getTotalCount, setIsCartOpen } = useCart();
+    const cartCount = getTotalCount();
 
     const toggleTypeFilter = (type) => {
         setSelectedTypes((prev) =>
@@ -31,20 +38,54 @@ export default function MerchPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
-            {/* Navbar Component */}
+            {/* Navbar Component (Tanpa Keranjang) */}
             <Navbar />
 
-            {/* Main Content dengan Offset Top Padding untuk Navbar Fixed */}
+            {/* Main Content */}
             <div className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-24 sm:pt-28 pb-6 space-y-6">
-                {/* Banner Promo Responsive */}
+                {/* Top Bar Header Merch + Tombol Keranjang */}
+                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+                    <div>
+                        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+                            Merch Store
+                        </h1>
+                        <p className="text-xs md:text-sm text-gray-500">
+                            Koleksi resmi Ibhyhood Merchandise
+                        </p>
+                    </div>
+
+                    {/* Tombol Keranjang Belanja Header */}
+                    <button
+                        onClick={() => setIsCartOpen(true)}
+                        className="relative bg-[#6B7CB4] hover:bg-[#5a6a9d] text-white px-4 py-2.5 rounded-xl transition-all active:scale-95 flex items-center gap-2 shadow-md font-semibold text-xs md:text-sm"
+                        aria-label="Buka Keranjang Belanja"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                        </svg>
+                        <span className="hidden sm:inline">Keranjang</span>
+                        {cartCount > 0 && (
+                            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-1 animate-pulse">
+                                {cartCount}
+                            </span>
+                        )}
+                    </button>
+                </div>
+
+                {/* Banner Promo */}
                 <section className="bg-gradient-to-r from-[#6B7CB4] to-[#8C9CCF] rounded-2xl p-5 md:p-6 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
                     <div className="space-y-2 md:space-y-3 w-full md:max-w-lg">
                         <span className="bg-white/20 text-[10px] md:text-xs px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
                             Limited Drop
                         </span>
-                        <h1 className="text-xl md:text-3xl font-extrabold tracking-tight leading-snug">
+                        <h2 className="text-xl md:text-3xl font-extrabold tracking-tight leading-snug">
                             {FEATURED_PROMO.title}
-                        </h1>
+                        </h2>
                         <p className="text-white/80 text-xs md:text-sm">
                             {FEATURED_PROMO.subtitle}
                         </p>
@@ -102,7 +143,7 @@ export default function MerchPage() {
                             )}
                         </div>
 
-                        {/* Merch Type */}
+                        {/* Merch Type Filter */}
                         <div>
                             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">
                                 Merch Type
@@ -169,7 +210,8 @@ export default function MerchPage() {
                                 {filteredProducts.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-all flex flex-col group"
+                                        onClick={() => setSelectedMerch(item)}
+                                        className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-all flex flex-col group cursor-pointer"
                                     >
                                         <div className="h-36 md:h-48 bg-[#C1D0FF]/20 relative flex items-center justify-center">
                                             {item.badge && (
@@ -196,7 +238,13 @@ export default function MerchPage() {
                                                 <span className="font-bold text-xs md:text-sm text-gray-900">
                                                     {item.price}
                                                 </span>
-                                                <button className="w-full sm:w-auto bg-[#6B7CB4] hover:bg-[#5a6a9d] text-white text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg transition-colors">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedMerch(item);
+                                                    }}
+                                                    className="w-full sm:w-auto bg-[#6B7CB4] hover:bg-[#5a6a9d] text-white text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg transition-colors font-medium"
+                                                >
                                                     + Cart
                                                 </button>
                                             </div>
@@ -209,7 +257,36 @@ export default function MerchPage() {
                 </div>
             </div>
 
-            {/* Footer Custom Sesuai Desain Baru */}
+            {/* Floating Cart Button (Mobile & Desktop saat scroll) */}
+            <button
+                onClick={() => setIsCartOpen(true)}
+                className="fixed bottom-6 right-6 z-40 bg-[#6B7CB4] hover:bg-[#5a6a9d] text-white p-4 rounded-full shadow-2xl transition-all active:scale-90 flex items-center justify-center border-2 border-white"
+                aria-label="Keranjang Melayang"
+            >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                </svg>
+                {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-white">
+                        {cartCount}
+                    </span>
+                )}
+            </button>
+
+            {/* Overlay Modal Detail Merch */}
+            {selectedMerch && (
+                <MerchDetailModal
+                    merch={selectedMerch}
+                    onClose={() => setSelectedMerch(null)}
+                />
+            )}
+
+            {/* Footer Component */}
             <Footer />
         </div>
     );

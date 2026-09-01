@@ -32,7 +32,7 @@ export default function GigsPage() {
                         <div
                             key={gig.id}
                             onClick={() => setSelectedGig(gig)}
-                            className="bg-[#C1D0FF]/40 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all flex flex-col"
+                            className="bg-[#C1D0FF]/40 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all flex flex-col group"
                         >
                             {/* Card Image Placeholder */}
                             <div className="h-40 bg-gray-300 relative flex items-end justify-center pb-2">
@@ -46,13 +46,17 @@ export default function GigsPage() {
                             </div>
 
                             {/* Card Body */}
-                            <div className="p-4 flex-1 flex flex-col justify-between">
-                                <h3 className="font-bold text-sm text-gray-900 line-clamp-2">
+                            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                                <h3 className="font-bold text-sm text-gray-900 group-hover:text-[#6B7CB4] transition-colors line-clamp-2">
                                     {gig.title}
                                 </h3>
-                                <p className="text-xs text-gray-600 mt-2">
-                                    From {gig.startingPrice || "IDR xxx.xxx"}
-                                </p>
+
+                                <div className="pt-2 border-t border-gray-200/60 flex items-center justify-between">
+                                    <span className="text-xs text-gray-500">Starting at</span>
+                                    <span className="font-bold text-xs md:text-sm text-gray-900">
+                                        {gig.startingPrice || "IDR xxx.xxx"}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     ))}

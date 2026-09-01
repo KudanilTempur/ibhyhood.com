@@ -88,9 +88,9 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
+        <div className="min-h-screen  bg-gray-100 flex flex-col md:flex-row ">
             {/* Sidebar Navigation */}
-            <aside className="w-full md:w-64 bg-slate-900 text-white p-6 shrink-0">
+            <aside className="w-full md:w-64 bg-slate-900 text-white p-6 shrink-0 fixed h-screen">
                 <h1 className="text-xl font-black tracking-wider text-[#8C9CCF] mb-8">
                     IBHYHOOD ADMIN
                 </h1>
@@ -105,8 +105,8 @@ export default function AdminPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-all ${activeTab === tab.id
-                                    ? "bg-[#6B7CB4] text-white shadow-md"
-                                    : "text-gray-400 hover:bg-slate-800 hover:text-white"
+                                ? "bg-[#6B7CB4] text-white shadow-md"
+                                : "text-gray-400 hover:bg-slate-800 hover:text-white"
                                 }`}
                         >
                             {tab.label}
@@ -116,7 +116,7 @@ export default function AdminPage() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+            <main className="flex-1 p-6 md:pl-72 md:p-10 overflow-y-auto">
                 {/* 1. HOME TAB */}
                 {activeTab === "home" && (
                     <div className="space-y-6">

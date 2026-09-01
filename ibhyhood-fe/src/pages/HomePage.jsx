@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Assets
@@ -31,6 +31,15 @@ const bgImageStyle = {
     objectPosition: "center",
 };
 
+const DEFAULT_SCHEDULES = [
+    { day: "31", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+    { day: "1", title: "REANIMAL", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+    { day: "2", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+    { day: "3", title: "A SPACE FOR THE UNBOUND", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+    { day: "4", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+    { day: "5", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
+];
+
 const getIndonesianMonth = () => {
     const months = [
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -48,7 +57,20 @@ const NAV_MENUS = [
 
 export default function HomePage() {
     const [activeMenu, setActiveMenu] = useState(0);
+    const [schedules, setSchedules] = useState(DEFAULT_SCHEDULES);
     const navigate = useNavigate();
+
+    // Mengambil data schedule dari localStorage saat component dipasang
+    useEffect(() => {
+        const savedSchedules = localStorage.getItem("ibhy_schedules");
+        if (savedSchedules) {
+            try {
+                setSchedules(JSON.parse(savedSchedules));
+            } catch (err) {
+                console.error("Gagal membaca schedule dari LocalStorage:", err);
+            }
+        }
+    }, []);
 
     return (
         <main className="relative min-h-dvh w-dvw overflow-x-hidden bg-black font-sans">
@@ -85,7 +107,7 @@ export default function HomePage() {
                             setActiveMenu={setActiveMenu}
                         />
 
-                        <RightSchedule />
+                        <RightSchedule schedules={schedules} />
                         <GiveawayCard promoImage={pandaGiveaway} />
                     </ScaledPanel>
                 </div>
@@ -132,7 +154,7 @@ export default function HomePage() {
                         </a>
 
                         {/* Schedule Section */}
-                        <MobileScheduleSection />
+                        <MobileScheduleSection schedules={schedules} />
 
                         {/* Giveaway Card */}
                         <div className="relative rounded-3xl overflow-hidden h-32 bg-black border border-white/10 shadow-md">
@@ -255,16 +277,7 @@ function SidebarMenu({ activeMenu, setActiveMenu }) {
     );
 }
 
-function RightSchedule() {
-    const schedules = [
-        { day: "31", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "1", title: "REANIMAL", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "2", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "3", title: "A SPACE FOR THE UNBOUND", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "4", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "5", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-    ];
-
+function RightSchedule({ schedules }) {
     return (
         <section className="absolute right-[1.4%] top-[3%] z-30 h-[68%] w-[28%] overflow-hidden rounded-[34px] bg-white/90 p-[1.1%]">
             <div className="mb-[4%] flex items-center justify-between gap-[4%]">
@@ -281,10 +294,10 @@ function RightSchedule() {
                 </div>
             </div>
 
-            <div className="flex h-[86%] flex-col gap-[2.2%]">
-                {schedules.map((item) => (
+            <div className="flex h-[86%] flex-col gap-[2.2%] overflow-y-auto pr-1">
+                {schedules.map((item, idx) => (
                     <article
-                        key={`${item.day}-${item.title}`}
+                        key={`${item.day}-${idx}`}
                         className="flex min-h-0 flex-1 items-center justify-between gap-[4%] rounded-[22px] bg-[#667AB3] px-[4%] py-[3%]"
                     >
                         <div className="min-w-0 flex-1 leading-none">
@@ -328,16 +341,7 @@ function GiveawayCard({ promoImage }) {
 /* SUB-COMPONENTS FOR MOBILE                                                 */
 /* ========================================================================= */
 
-function MobileScheduleSection() {
-    const schedules = [
-        { day: "31", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "1", title: "REANIMAL", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "2", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "3", title: "A SPACE FOR THE UNBOUND", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "4", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-        { day: "5", title: "Mobile Legends", time: "[21.00/21.30 WIB]", type: "LIVE STREAM" },
-    ];
-
+function MobileScheduleSection({ schedules }) {
     return (
         <div className="bg-white/90 rounded-3xl p-4 shadow-md flex flex-col gap-3">
             {/* Header Schedule Mobile Bersih */}
@@ -349,9 +353,9 @@ function MobileScheduleSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-                {schedules.map((item) => (
+                {schedules.map((item, idx) => (
                     <div
-                        key={`${item.day}-${item.title}`}
+                        key={`${item.day}-${idx}`}
                         className="flex items-center justify-between bg-[#667AB3] rounded-2xl p-3 text-white"
                     >
                         <div className="flex flex-col leading-tight">
