@@ -1,13 +1,14 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import heroVume from "../assets/images/hero-vume.png";
+import { VUME_DATA } from "../data/vumeData";
 
 export default function VumePage() {
     return (
         <main className="min-h-screen flex flex-col bg-white">
             <Navbar />
 
-            {/* Hero Vume dengan Offset Navbar */}
+            {/* Hero Vume */}
             <section className="pt-16 sm:pt-12">
                 <img
                     src={heroVume}
@@ -25,73 +26,68 @@ export default function VumePage() {
                     </h2>
                 </div>
 
-                {/* VOICI */}
-                <div className="mx-auto mt-10 sm:mt-16 flex flex-col md:flex-row max-w-6xl items-center gap-8 md:gap-12">
-                    <div className="h-64 w-64 sm:h-72 sm:w-72 shrink-0 rounded-xl bg-[#E5CADD] shadow-sm">
-                        {/* tempat gambar parfum */}
-                    </div>
+                {/* Dynamic List Parfum */}
+                <div className="space-y-12 mt-10 sm:mt-16">
+                    {VUME_DATA.map((item, index) => (
+                        <div key={item.id}>
+                            <div
+                                className={`mx-auto flex flex-col ${index % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
+                                    } max-w-6xl items-center gap-8 md:gap-12`}
+                            >
+                                {/* Container Gambar Parfum (Tanpa Background Warna) */}
+                                <div className="h-64 w-64 sm:h-72 sm:w-72 shrink-0 overflow-hidden flex items-center justify-center p-2">
+                                    {item.image ? (
+                                        <img
+                                            src={item.image}
+                                            alt={item.title}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full border border-dashed border-gray-300 rounded-xl flex items-center justify-center text-center p-4">
+                                            <span className="text-xs text-gray-400 font-medium">Belum ada gambar botol</span>
+                                        </div>
+                                    )}
+                                </div>
 
-                    <div className="text-center md:text-left">
-                        <h3 className="text-3xl sm:text-5xl font-medium tracking-tight text-gray-900">
-                            VOICI
-                        </h3>
+                                {/* Detail Parfum */}
+                                <div className="text-center md:text-left flex-1">
+                                    <h3 className="text-3xl sm:text-5xl font-medium tracking-tight text-gray-900">
+                                        {item.title}
+                                    </h3>
 
-                        <p className="mt-1 italic text-gray-600 text-sm sm:text-base">
-                            Eau de Parfum
-                        </p>
+                                    <p className="mt-1 italic text-gray-600 text-sm sm:text-base">
+                                        {item.subtitle}
+                                    </p>
 
-                        <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-700 space-y-1">
-                            <p className="font-semibold text-gray-900">Note</p>
-                            <p>Top : Orange Mandarin</p>
-                            <p>Middle : Honey, Orange Blossom, Jasmine</p>
-                            <p>Base : Caramel, Patchouli</p>
+                                    <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-700 space-y-1">
+                                        <p className="font-semibold text-gray-900">Note</p>
+                                        <p>Top : {item.top}</p>
+                                        <p>Middle : {item.middle}</p>
+                                        <p>Base : {item.base}</p>
+                                    </div>
+
+                                    <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium text-gray-800">
+                                        Size : {item.size}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Tagline di antara produk pertama dan kedua */}
+                            {index === 0 && (
+                                <div className="my-10 sm:my-16 flex flex-wrap justify-center items-center gap-3 sm:gap-8 text-sm sm:text-xl text-gray-600 font-light">
+                                    <span>Eau De Parfume</span>
+                                    <span className="hidden sm:inline">|</span>
+                                    <span>Home Made</span>
+                                    <span className="hidden sm:inline">|</span>
+                                    <span>Intimate</span>
+                                </div>
+                            )}
                         </div>
-
-                        <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium text-gray-800">
-                            Size : 30ml
-                        </p>
-                    </div>
-                </div>
-
-                {/* Tagline Responsive */}
-                <div className="my-10 sm:my-16 flex flex-wrap justify-center items-center gap-3 sm:gap-8 text-sm sm:text-xl text-gray-600 font-light">
-                    <span>Eau De Parfume</span>
-                    <span className="hidden sm:inline">|</span>
-                    <span>Home Made</span>
-                    <span className="hidden sm:inline">|</span>
-                    <span>Intimate</span>
-                </div>
-
-                {/* PHANTOVI */}
-                <div className="mx-auto flex flex-col-reverse md:flex-row max-w-6xl items-center gap-8 md:gap-12">
-                    <div className="flex-1 text-center md:text-left">
-                        <h3 className="text-3xl sm:text-5xl font-medium tracking-tight text-gray-900">
-                            PHANTOVI
-                        </h3>
-
-                        <p className="mt-1 italic text-gray-600 text-sm sm:text-base">
-                            Wood & Candy
-                        </p>
-
-                        <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-700 space-y-1">
-                            <p className="font-semibold text-gray-900">Note</p>
-                            <p>Top : Saffron, Jasmine</p>
-                            <p>Middle : Ambergris, Sugar</p>
-                            <p>Base : Fir Resin, Amber Wood</p>
-                        </div>
-
-                        <p className="mt-4 sm:mt-6 text-xs sm:text-sm font-medium text-gray-800">
-                            Size : 30ml
-                        </p>
-                    </div>
-
-                    <div className="h-64 w-64 sm:h-72 sm:w-72 shrink-0 rounded-xl bg-[#BFE5EE] shadow-sm">
-                        {/* tempat gambar parfum */}
-                    </div>
+                    ))}
                 </div>
             </section>
 
-            {/* Reusable Footer Component */}
+            {/* Footer */}
             <Footer />
         </main>
     );
